@@ -1,6 +1,9 @@
-﻿using System.Web.Http;
+﻿using System.Configuration;
+using System.Data.SqlClient;
 using System.Net.Http.Formatting;
+using System.Web.Http;
 using Kawaii.NetworkDocumentation.AppDataService.Managers;
+using Kawaii.NetworkDocumentation.AppDataService.DataModel.Database;
 using Unity;
 using Unity.Lifetime;
 
@@ -14,7 +17,10 @@ namespace Kawaii.NetworkDocumentation.AppDataService
             var container = new UnityContainer();
             container.RegisterType<IPersonManager, PersonManager>(new HierarchicalLifetimeManager());
             container.RegisterType<ICompanyManager, CompanyManager>(new HierarchicalLifetimeManager());
-            //container.RegisterType<System.Data.IDbConnection, System.Data.sql>
+            container.RegisterInstance<IDatabaseSession>(new DatabaseSession(
+                                                                ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString, 
+                                                                con => new SqlConnection(con)));
+            
             config.DependencyResolver = new UnityDependencyResolver(container);
 
             // enforce json response through content negotiation

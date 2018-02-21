@@ -41,12 +41,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Company.cs" />
+    <Compile Include="Database\DatabaseSession.cs" />
+    <Compile Include="Database\IDatabaseSession.cs" />
     <Compile Include="IDataModel.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlHelpers\BasicType.cs" />
-    <Compile Include="SqlHelpers\SelectData.cs" />
-    <Compile Include="SqlHelpers\TableColumnInfo.cs" />
+    <Compile Include="Database\BasicType.cs" />
+    <Compile Include="Database\SelectData.cs" />
+    <Compile Include="Database\TableColumnInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

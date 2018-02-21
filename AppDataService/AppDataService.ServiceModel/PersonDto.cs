@@ -5,6 +5,11 @@ namespace Kawaii.NetworkDocumentation.AppDataService.ServiceModel
     [DataContract]
     public partial class PersonDto
     {
+        public PersonDto(int id)
+        {
+            this.PersonId = id;
+        }
+
         [DataMember(IsRequired = true)]
         public int PersonId { get; internal set; }
 

@@ -1,4 +1,4 @@
-﻿namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.SqlHelpers
+﻿namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
 {
     public enum BasicType
     {
