@@ -18,7 +18,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Managers
 
         public IEnumerable<PersonDto> GetPersons()
         {
-            var persons = new SqlSelect<Person>().Execute(this.dbSession);
+            var persons = new SqlSelect<Person>().Run(this.dbSession);
 
             return persons.Select(x => new PersonDto(x.PersonId)
                                         {

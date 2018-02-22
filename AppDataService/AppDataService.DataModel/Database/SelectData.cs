@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
+using Dapper;
 
 namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
 {
@@ -30,37 +31,18 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
             return this;
         }
 
-        public IEnumerable<T> Execute(IDatabaseSession dbSession, CommandBehavior behavior = CommandBehavior.Default)
+        public IEnumerable<T> Run(IDatabaseSession dbSession, CommandBehavior behavior = CommandBehavior.Default)
         {
-            var result = new List<T>();
+            IEnumerable<T> result = null;
 
             using (var connection = dbSession.GetConnection())
             {
                 if(connection.State != ConnectionState.Open)
                 {
                     connection.Open();
-                }                
-
-                var cmd = connection.CreateCommand();
-                cmd.CommandText = this.BuildSql();
-                
-                var reader = cmd.ExecuteReader(behavior);
-
-
-                while (reader.Read())
-                {
-                    var item = new T();
-
-                    foreach (var column in this.tableColumns)
-                    {
-                        if (reader[column.ColumnName] != System.DBNull.Value)
-                        {
-                            column.ModelPropertyInfo.SetValue(item, reader[column.ColumnName]);
-                        }
-                    }
-
-                    result.Add(item);
                 }
+
+                result = connection.Query<T>(this.BuildSql());
             }
 
             return result;
