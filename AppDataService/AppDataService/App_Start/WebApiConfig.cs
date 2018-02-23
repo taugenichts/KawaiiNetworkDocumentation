@@ -15,8 +15,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService
         {
             //configure dependency injection
             var container = new UnityContainer();
-            container.RegisterType<IPersonManager, PersonManager>(new HierarchicalLifetimeManager());
-            container.RegisterType<ICompanyManager, CompanyManager>(new HierarchicalLifetimeManager());
+            container.RegisterType<IComputerManager, ComputerManager>(new HierarchicalLifetimeManager());
             container.RegisterInstance<IDatabaseSession>(new DatabaseSession(
                                                                 ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString, 
                                                                 con => new SqlConnection(con)));

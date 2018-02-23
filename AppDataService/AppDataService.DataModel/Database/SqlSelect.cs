@@ -31,7 +31,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
             return this;
         }
 
-        public IEnumerable<T> Run(IDatabaseSession dbSession, CommandBehavior behavior = CommandBehavior.Default)
+        public IEnumerable<T> Run(IDatabaseSession dbSession)
         {
             IEnumerable<T> result = null;
 

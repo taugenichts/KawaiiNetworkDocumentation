@@ -43,14 +43,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Company.cs" />
+    <Compile Include="Computer.cs" />
     <Compile Include="Database\DatabaseSession.cs" />
     <Compile Include="Database\IDatabaseSession.cs" />
     <Compile Include="IDataModel.cs" />
-    <Compile Include="Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Database\BasicType.cs" />
-    <Compile Include="Database\SelectData.cs" />
+    <Compile Include="Database\SqlSelect.cs" />
     <Compile Include="Database\TableColumnInfo.cs" />
   </ItemGroup>
   <ItemGroup>
