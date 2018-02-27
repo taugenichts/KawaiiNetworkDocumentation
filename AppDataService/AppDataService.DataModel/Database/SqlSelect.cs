@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
-using Dapper;
 
 namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
 {
@@ -33,19 +32,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
 
         public IEnumerable<T> Run(IDatabaseSession dbSession)
         {
-            IEnumerable<T> result = null;
-
-            using (var connection = dbSession.GetConnection())
-            {
-                if(connection.State != ConnectionState.Open)
-                {
-                    connection.Open();
-                }
-
-                result = connection.Query<T>(this.BuildSql());
-            }
-
-            return result;
+            return dbSession.Query<T>(this.BuildSql());
         }
 
         private string BuildSql()

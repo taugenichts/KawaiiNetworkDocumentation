@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using Dapper;
 
 namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
 {
@@ -18,6 +20,23 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
         public IDbConnection GetConnection()
         {
             return this.createConnectionDelegate(this.connectionString);
+        }
+
+        public IEnumerable<T> Query<T>(string sql)
+        {
+            IEnumerable<T> results = null;
+
+            using(var connection = this.GetConnection())
+            {
+                if(connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                results = connection.Query<T>(sql);
+            }
+
+            return results ?? new List<T>();
         }
     }
 }
