@@ -24,11 +24,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Tests.ManagerTests
         [TestInitialize]
         public void OneTimeSetup()
         {
-            this.computerDataModel = this.RandomizeComputers(5);
-
-            this.databaseSessionMock
-                .Setup<IEnumerable<Computer>>(x => x.Query<Computer>(It.IsAny<string>()))
-                .Returns(this.computerDataModel);
+            this.computerDataModel = this.RandomizeComputers(5);            
 
             var container = new UnityContainer();
             container.RegisterInstance<IDatabaseSession>(databaseSessionMock.Object);
@@ -39,9 +35,13 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Tests.ManagerTests
 
         [TestMethod]
         public void GetComputersShouldReturnDtosWithSameInfoAsDataModel()
-        {            
+        {
+            this.databaseSessionMock
+                .Setup<IEnumerable<Computer>>(x => x.Query<Computer>(It.IsAny<string>()))
+                .Returns(this.computerDataModel);
+
             var computerManager = this.container.Resolve<IComputerManager>();
-            var computerDtos = computerManager.GetComputers();
+            var computerDtos = computerManager.GetComputers();            
 
             Assert.AreEqual(computerDtos.Count(), this.computerDataModel.Count());
             foreach(var computerDto in computerDtos)

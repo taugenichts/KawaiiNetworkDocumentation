@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Data;
 using Dapper;
 
@@ -22,7 +23,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
             return this.createConnectionDelegate(this.connectionString);
         }
 
-        public IEnumerable<T> Query<T>(string sql)
+        public IEnumerable<T> Query<T>(string sql, IDictionary<string, object> parameterList)
         {
             IEnumerable<T> results = null;
 
@@ -33,10 +34,29 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
                     connection.Open();
                 }
 
-                results = connection.Query<T>(sql);
+                var parameters = this.CreateDynamicParameters(parameterList);
+
+                results = connection.Query<T>(sql, parameters);
             }
 
             return results ?? new List<T>();
+        }
+
+        private DynamicParameters CreateDynamicParameters(IDictionary<string, object> parameters)
+        {
+            if(parameters != null && parameters.Keys.Any())
+            {
+                var dynParams = new DynamicParameters();
+
+                foreach(var key in parameters.Keys)
+                {
+                    dynParams.Add(string.Format("@{0}", key), parameters[key]);
+                }
+
+                return dynParams;
+            }
+
+            return null;
         }
     }
 }

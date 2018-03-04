@@ -7,6 +7,6 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
     {
         IDbConnection GetConnection();
 
-        IEnumerable<T> Query<T>(string sql);
+        IEnumerable<T> Query<T>(string sql, IDictionary<string, object> parameterList);
     }
 }

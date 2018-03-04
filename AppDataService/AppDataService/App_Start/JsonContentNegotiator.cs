@@ -19,5 +19,5 @@ namespace Kawaii.NetworkDocumentation.AppDataService
         {
             return new ContentNegotiationResult(this.formatter, new MediaTypeHeaderValue("application/json"));
         }
-    }
+    }    
 }

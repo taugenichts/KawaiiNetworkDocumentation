@@ -46,6 +46,9 @@
     <Compile Include="Computer.cs" />
     <Compile Include="Database\DatabaseSession.cs" />
     <Compile Include="Database\IDatabaseSession.cs" />
+    <Compile Include="Database\SqlCondition.cs" />
+    <Compile Include="Database\SqlConditionBase.cs" />
+    <Compile Include="Database\SqlConditionGroup.cs" />
     <Compile Include="IDataModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Database\BasicType.cs" />

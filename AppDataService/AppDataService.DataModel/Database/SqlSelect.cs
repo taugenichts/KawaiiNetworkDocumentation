@@ -11,6 +11,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
         private string tableName;
         private IEnumerable<TableColumnInfo> tableColumns;
         private int? selectNumberOfRecords;
+        private SqlConditionGroup conditions = new SqlConditionGroup();
 
         public SqlSelect()
         {
@@ -24,25 +25,65 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
             this.tableColumns = properties.Where(x => !interfaceProperties.Contains(x.Name)).Select(x => new TableColumnInfo(x));
         }
 
-        public SqlSelect<T> Top(int top)
+        public SqlSelect<T> First(int first)
         {
-            this.selectNumberOfRecords = top > 0 ? top : (int?)null;
+            this.selectNumberOfRecords = first > 0 ? first : (int?)null;
+            return this;
+        }
+
+        public SqlSelect<T> AddCondition(SqlConditionBase condition)
+        {
+            this.conditions.ChildConditions.Add(condition);
             return this;
         }
 
         public IEnumerable<T> Run(IDatabaseSession dbSession)
         {
-            return dbSession.Query<T>(this.BuildSql());
+            var parameters = this.GetParameters();
+            return dbSession.Query<T>(this.BuildSql(), parameters);
         }
 
         private string BuildSql()
         {
             string topString = this.selectNumberOfRecords.HasValue ? string.Format("TOP {0} ", this.selectNumberOfRecords.Value) : string.Empty;
 
-            return string.Format("SELECT {0}{1} FROM {2};",
+            string whereString = this.conditions.ChildConditions.Any() ? string.Format(" WHERE {0}", this.conditions.ToString()) : string.Empty;
+
+            return string.Format("SELECT {0}{1} FROM {2}{3};",
                                     topString,
                                     string.Join(", ", this.tableColumns.Select(x => x.ColumnName)),
-                                    this.tableName);
+                                    this.tableName,
+                                    whereString);
+        }
+
+        private IDictionary<string, object> GetParameters()
+        {
+            if (conditions.ChildConditions.Any())
+            {
+                var parameters = new Dictionary<string, object>();
+                FillParameterDictionaryRecursive(this.conditions, parameters);
+
+                return parameters;
+            }
+
+            return null;
+        }
+
+        private static void FillParameterDictionaryRecursive(SqlConditionBase condition, IDictionary<string, object> dict)
+        {
+            if(condition is SqlCondition)
+            {
+                var singleCondition = condition as SqlCondition;
+                dict.Add(singleCondition.ValueParameterName, singleCondition.Value);
+            }
+            else if(condition is SqlConditionGroup)
+            {
+                var conditionGroup = condition as SqlConditionGroup;
+                foreach(var childCondition in conditionGroup.ChildConditions)
+                {
+                    FillParameterDictionaryRecursive(childCondition, dict);
+                }
+            }
         }
     }
 }

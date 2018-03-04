@@ -19,29 +19,45 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Managers
             throw new NotImplementedException();
         }
 
-        public ComputerDto GetComputer(int Id)
+        public ComputerDto GetComputer(int id)
         {
-            throw new NotImplementedException();
+            var computer = new SqlSelect<Computer>()
+                .AddCondition(new SqlConditionGroup
+                {
+                    ChildConditions = new SqlCondition[]
+                    {
+                        new SqlCondition("ComputerId", ComparisionOperator.Equals, id),
+                        new SqlCondition("ComputerId", ComparisionOperator.Equals, id, LogicalOperator.And)
+                    }
+                })
+                .Run(this.DatabaseSession)
+                .Single();
+
+            return ToComputerDto(computer);
         }
 
         public IEnumerable<ComputerDto> GetComputers(int takeFirst = 0)
         {
             var computers = new SqlSelect<Computer>().Run(this.DatabaseSession);
-
-            return computers.Select(x => new ComputerDto
-            {
-                ComputerId = x.ComputerId,
-                Inactive = x.Inactive,
-                Name = x.Name,
-                LastModified = x.LastModified,
-                LastModifiedBy = x.LastModifiedBy,
-                StaticIp = x.StaticIp
-            });
+            return computers.Select(ToComputerDto);
         }
 
         public UpdatedResponse UpdateComputer(ComputerDto computer)
         {
             throw new NotImplementedException();
+        }
+
+        private static ComputerDto ToComputerDto(Computer computer)
+        {
+            return new ComputerDto
+            {
+                ComputerId = computer.ComputerId,
+                Inactive = computer.Inactive,
+                Name = computer.Name,
+                LastModified = computer.LastModified,
+                LastModifiedBy = computer.LastModifiedBy,
+                StaticIp = computer.StaticIp
+            };
         }
     }
 }
