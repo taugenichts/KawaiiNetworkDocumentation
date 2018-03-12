@@ -9,20 +9,15 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
         where T : IDataModel, new()
     {
         private string tableName;
-        private IEnumerable<TableColumnInfo> tableColumns;
+        private IEnumerable<string> columnNames;
         private int? selectNumberOfRecords;
         private SqlConditionGroup conditions = new SqlConditionGroup();
 
         public SqlSelect()
         {
             var modelType = typeof(T);
-            this.tableName = modelType.Name;
-
-            var interfaceType = typeof(IDataModel);
-            IReadOnlyCollection<string> interfaceProperties = interfaceType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy).Select(x => x.Name).ToList();
-
-            var properties = modelType.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public);
-            this.tableColumns = properties.Where(x => !interfaceProperties.Contains(x.Name)).Select(x => new TableColumnInfo(x));
+            this.tableName = modelType.Name;            
+            this.columnNames = DataModelHelper.GetProperties(modelType);
         }
 
         public SqlSelect<T> First(int first)
@@ -65,7 +60,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
 
             return string.Format("SELECT {0}{1} FROM {2}{3};",
                                     topString,
-                                    string.Join(", ", this.tableColumns.Select(x => x.ColumnName)),
+                                    string.Join(", ", this.columnNames),
                                     this.tableName,
                                     whereString);
         }
