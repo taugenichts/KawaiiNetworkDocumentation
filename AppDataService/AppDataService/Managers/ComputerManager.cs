@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Kawaii.NetworkDocumentation.AppDataService.ServiceModel;
-using Kawaii.NetworkDocumentation.AppDataService.DataModel;
+using Kawaii.NetworkDocumentation.AppDataService.ServiceModel.Computer;
+using Kawaii.NetworkDocumentation.AppDataService.DataModel.Entities;
 using Kawaii.NetworkDocumentation.AppDataService.DataModel.Database;
 
 namespace Kawaii.NetworkDocumentation.AppDataService.Managers

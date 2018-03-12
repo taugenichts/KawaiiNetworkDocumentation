@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
 using Kawaii.NetworkDocumentation.AppDataService.Managers;
-using Kawaii.NetworkDocumentation.AppDataService.ServiceModel;
+using Kawaii.NetworkDocumentation.AppDataService.ServiceModel.Computer;
 
 namespace Kawaii.NetworkDocumentation.AppDataService.Controllers
 {

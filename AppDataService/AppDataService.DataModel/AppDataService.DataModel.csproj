@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Computer.cs" />
+    <Compile Include="Entities\Computer.cs" />
     <Compile Include="Database\DatabaseSession.cs" />
     <Compile Include="Database\IDatabaseSession.cs" />
     <Compile Include="Database\SqlCondition.cs" />

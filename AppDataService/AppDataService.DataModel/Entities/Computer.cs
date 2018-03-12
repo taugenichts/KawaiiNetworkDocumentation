@@ -1,6 +1,7 @@
 ﻿using System;
+using Kawaii.NetworkDocumentation.AppDataService.DataModel;
 
-namespace Kawaii.NetworkDocumentation.AppDataService.DataModel
+namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Entities
 {
     public class Computer : IDataModel, IRecordChangeInfo
     {

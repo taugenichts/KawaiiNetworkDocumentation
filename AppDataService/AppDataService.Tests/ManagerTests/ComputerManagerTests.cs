@@ -3,7 +3,7 @@ using System.Data;
 using System.Linq;
 using Dapper;
 using Kawaii.NetworkDocumentation.AppDataService.Managers;
-using Kawaii.NetworkDocumentation.AppDataService.DataModel;
+using Kawaii.NetworkDocumentation.AppDataService.DataModel.Entities;
 using Kawaii.NetworkDocumentation.AppDataService.DataModel.Database;
 using Kawaii.NetworkDocumentation.AppDataService.Tests.TestHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -37,7 +37,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Tests.ManagerTests
         public void GetComputersShouldReturnDtosWithSameInfoAsDataModel()
         {
             this.databaseSessionMock
-                .Setup<IEnumerable<Computer>>(x => x.Query<Computer>(It.IsAny<string>()))
+                .Setup<IEnumerable<Computer>>(x => x.Query<Computer>(It.IsAny<string>(), null))
                 .Returns(this.computerDataModel);
 
             var computerManager = this.container.Resolve<IComputerManager>();

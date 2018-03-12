@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Kawaii.NetworkDocumentation.AppDataService.ServiceModel
+namespace Kawaii.NetworkDocumentation.AppDataService.ServiceModel.Computer
 {
     [DataContract]
     public class ComputerSearchRequest
