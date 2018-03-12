@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComputerDto.cs" />
+    <Compile Include="ComputerSearchRequest.cs" />
     <Compile Include="CreatedResponse.cs" />
     <Compile Include="DeletedResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -50,6 +50,7 @@
     <Compile Include="Database\SqlConditionBase.cs" />
     <Compile Include="Database\SqlConditionGroup.cs" />
     <Compile Include="IDataModel.cs" />
+    <Compile Include="IRecordChangeInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Database\BasicType.cs" />
     <Compile Include="Database\SqlSelect.cs" />

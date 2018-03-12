@@ -8,6 +8,8 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Managers
     {
         IEnumerable<ComputerDto> GetComputers(int takeFirst = 0);
 
+        IEnumerable<ComputerDto> SearchComputers(ComputerSearchRequest searchRequest);
+
         ComputerDto GetComputer(int Id);
 
         CreatedResponse CreateComputer(ComputerDto computer);

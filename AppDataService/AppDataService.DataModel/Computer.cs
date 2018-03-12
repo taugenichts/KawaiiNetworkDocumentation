@@ -2,7 +2,7 @@
 
 namespace Kawaii.NetworkDocumentation.AppDataService.DataModel
 {
-    public class Computer : IDataModel
+    public class Computer : IDataModel, IRecordChangeInfo
     {
         public int Id { get => this.ComputerId; set => this.ComputerId = value; }
 

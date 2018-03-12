@@ -22,14 +22,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Managers
         public ComputerDto GetComputer(int id)
         {
             var computer = new SqlSelect<Computer>()
-                .AddCondition(new SqlConditionGroup
-                {
-                    ChildConditions = new SqlCondition[]
-                    {
-                        new SqlCondition("ComputerId", ComparisionOperator.Equals, id),
-                        new SqlCondition("ComputerId", ComparisionOperator.Equals, id, LogicalOperator.And)
-                    }
-                })
+                .AddCondition("ComputerId", ComparisionOperator.Equals, id)
                 .Run(this.DatabaseSession)
                 .Single();
 
@@ -38,7 +31,20 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Managers
 
         public IEnumerable<ComputerDto> GetComputers(int takeFirst = 0)
         {
-            var computers = new SqlSelect<Computer>().Run(this.DatabaseSession);
+            var computers = new SqlSelect<Computer>()
+                            .First(takeFirst)
+                            .Run(this.DatabaseSession);
+
+            return computers.Select(ToComputerDto);
+        }
+
+        public IEnumerable<ComputerDto> SearchComputers(ComputerSearchRequest searchRequest)
+        {
+            var computers = new SqlSelect<Computer>()
+                                .AddCondition("Name", ComparisionOperator.Like, searchRequest.Name)
+                                .AddCondition("StaticIp", ComparisionOperator.Like, searchRequest.StaticIp, LogicalOperator.And)
+                                .Run(this.DatabaseSession);
+
             return computers.Select(ToComputerDto);
         }
 

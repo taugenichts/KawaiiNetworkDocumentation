@@ -37,6 +37,20 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
             return this;
         }
 
+        public SqlSelect<T> AddCondition(string propertyName, ComparisionOperator comparisionOperator, object value, LogicalOperator logicalOperator = LogicalOperator.And)
+        {
+            if(comparisionOperator != ComparisionOperator.IsNull 
+                && comparisionOperator != ComparisionOperator.IsNotNull
+                && value == null)
+            {
+                // if there is no meaningful value given, just skip adding this condition
+                return this;
+            }
+
+            this.AddCondition(new SqlCondition(propertyName, comparisionOperator, value, logicalOperator));
+            return this;
+        }
+
         public IEnumerable<T> Run(IDatabaseSession dbSession)
         {
             var parameters = this.GetParameters();

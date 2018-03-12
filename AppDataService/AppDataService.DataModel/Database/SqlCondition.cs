@@ -11,11 +11,12 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
         }
 
         public SqlCondition(string propertyName, ComparisionOperator comparisionOperator, object value)
-        {
+        {            
             this.AppendWithOperator = LogicalOperator.And;
             this.PropertyName = propertyName;
             this.ComparisionOperator = comparisionOperator;
             this.Value = value;
+            this.initiallyfixLikeValue();
         }
 
         public SqlCondition(string propertyName, ComparisionOperator comparisionOperator, object value, LogicalOperator logicalOperator)
@@ -24,6 +25,17 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
             this.PropertyName = propertyName;
             this.ComparisionOperator = comparisionOperator;
             this.Value = value;
+            this.initiallyfixLikeValue();
+        }
+
+        public SqlCondition(string propertyName, ComparisionOperator comparisionOperator, object value, LogicalOperator logicalOperator, string parameterName)
+        {
+            this.AppendWithOperator = logicalOperator;
+            this.PropertyName = propertyName;
+            this.ComparisionOperator = comparisionOperator;
+            this.Value = value;
+            this.ValueParameterName = parameterName;
+            this.initiallyfixLikeValue();
         }
 
         public string PropertyName { get; set; }
@@ -60,9 +72,9 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
                                     : this.ComparisionOperator == ComparisionOperator.Like ? "LIKE" : "=";
             string rightOperand = (this.ComparisionOperator != ComparisionOperator.IsNull
                                     && this.ComparisionOperator != ComparisionOperator.IsNotNull)
-                                    ? this.ValueParameterName : string.Empty;
+                                    ? "@" + this.ValueParameterName : string.Empty;
 
-            return string.Format("({0} {1} {{{2}}})", leftOperand, compOperator, rightOperand);                                    
+            return string.Format("({0} {1} {2})", leftOperand, compOperator, rightOperand);                                    
         }
 
         private string buildParameterName(string propertyName)
@@ -79,6 +91,16 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
             }
 
             return builder.ToString();
+        }
+
+        private void initiallyfixLikeValue()
+        {
+            if(this.Value is string
+                && this.ComparisionOperator == ComparisionOperator.Like
+                && !((string)this.Value).EndsWith("%"))
+            {
+                this.Value = ((string)this.Value) + "%";
+            }
         }
     }
 
