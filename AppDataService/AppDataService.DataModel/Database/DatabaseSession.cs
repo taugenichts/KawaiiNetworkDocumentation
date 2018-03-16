@@ -2,15 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
+using System.Web;
 using Dapper;
 
 namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
 {
     public class DatabaseSession : IDatabaseSession
-    {
-        
+    {        
         private Func<string, IDbConnection> createConnectionDelegate;
         private string connectionString;
+        
+        public string User
+        {
+            get
+            {                
+                return HttpContext.Current?.User?.Identity?.Name;                
+            }
+        }
 
         public DatabaseSession(string connectionString, Func<string, IDbConnection> createConnection)
         {
@@ -40,6 +48,25 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
             }
 
             return results ?? new List<T>();
+        }
+
+        public int Insert<T>(string insertSql, T entity)
+        {
+            var insertSqlReturningId = string.Format("{0}; SELECT CAST(SCOPE_IDENTITY() as int)", insertSql);
+
+            int serverId;
+
+            using (var connection = this.GetConnection())
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                serverId = connection.Query<int>(insertSqlReturningId, entity).Single();
+            }
+
+            return serverId;
         }
 
         private DynamicParameters CreateDynamicParameters(IDictionary<string, object> parameters)

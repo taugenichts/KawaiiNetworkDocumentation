@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Kawaii.NetworkDocumentation.AppDataService.ServiceModel;
+using Kawaii.NetworkDocumentation.AppDataService.DataModel;
 using Kawaii.NetworkDocumentation.AppDataService.ServiceModel.Computer;
 
 namespace Kawaii.NetworkDocumentation.AppDataService.Managers

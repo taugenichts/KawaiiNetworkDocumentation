@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kawaii.NetworkDocumentation.AppDataService.ServiceModel;
-using Kawaii.NetworkDocumentation.AppDataService.ServiceModel.Computer;
+using Kawaii.NetworkDocumentation.AppDataService.DataModel;
 using Kawaii.NetworkDocumentation.AppDataService.DataModel.Entities;
 using Kawaii.NetworkDocumentation.AppDataService.DataModel.Database;
+using Kawaii.NetworkDocumentation.AppDataService.ServiceModel.Computer;
 
 namespace Kawaii.NetworkDocumentation.AppDataService.Managers
 {
@@ -12,7 +12,8 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Managers
     {
         public CreatedResponse CreateComputer(ComputerDto computer)
         {
-            throw new NotImplementedException();
+            var response = new SqlInsert<Computer>(ToComputer(computer)).Run(this.DatabaseSession);
+            return response;
         }
 
         public DeletedResponse DeleteComputer(int id, DateTime lastModified)
@@ -64,6 +65,19 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Managers
                 LastModified = computer.LastModified,
                 LastModifiedBy = computer.LastModifiedBy,
                 StaticIp = computer.StaticIp
+            };
+        }
+
+        private static Computer ToComputer(ComputerDto computer)
+        {
+            return new Computer
+            {
+                ComputerId = computer.ComputerId,
+                Inactive = computer.Inactive,
+                Name = computer.Name,
+                StaticIp = computer.StaticIp,
+                LastModified = computer.LastModified,
+                LastModifiedBy = computer.LastModifiedBy
             };
         }
     }

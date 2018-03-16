@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
+using Kawaii.NetworkDocumentation.AppDataService.DataModel;
 using Kawaii.NetworkDocumentation.AppDataService.Managers;
 using Kawaii.NetworkDocumentation.AppDataService.ServiceModel.Computer;
 
@@ -34,6 +35,13 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Controllers
         public IEnumerable<ComputerDto> Search([FromUri] ComputerSearchRequest searchRequest)
         {
             return this.computerManager.SearchComputers(searchRequest);
+        }
+
+        [Route("")]
+        [HttpPost]
+        public CreatedResponse Create(ComputerDto computer)
+        {
+            return this.computerManager.CreateComputer(computer);
         }
     }
 }
