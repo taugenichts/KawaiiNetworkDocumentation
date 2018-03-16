@@ -14,6 +14,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
 
         public SqlInsert(T entity)
         {
+            this.entity = entity;
             var modelType = typeof(T);
             this.tableName = modelType.Name;
             this.primaryKey = this.tableName + "Id";
