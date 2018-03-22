@@ -43,5 +43,12 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Controllers
         {
             return this.computerManager.CreateComputer(computer);
         }
+
+        [Route("")]
+        [HttpPut]
+        public UpdatedResponse Update(ComputerDto computer)
+        {
+            return this.computerManager.UpdateComputer(computer);
+        }
     }
 }

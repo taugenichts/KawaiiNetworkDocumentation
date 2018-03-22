@@ -8,7 +8,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
         where T : IDataModel
     {
         private readonly string tableName;
-        private readonly string primaryKey;
+        private readonly string primaryKeyColumn;
         private readonly IEnumerable<string> columnNames;
         private readonly T entity;
 
@@ -17,8 +17,8 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
             this.entity = entity;
             var modelType = typeof(T);
             this.tableName = modelType.Name;
-            this.primaryKey = this.tableName + "Id";
-            this.columnNames = DataModelHelper.GetProperties(modelType).Where(x => x != this.primaryKey);            
+            this.primaryKeyColumn = this.tableName + "Id";
+            this.columnNames = DataModelHelper.GetProperties(modelType).Where(x => x != this.primaryKeyColumn);            
         }
 
         public CreatedResponse Run(IDatabaseSession dbSession)

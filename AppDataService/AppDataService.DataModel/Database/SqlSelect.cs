@@ -8,10 +8,11 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
     public class SqlSelect<T>
         where T : IDataModel, new()
     {
-        private string tableName;
-        private IEnumerable<string> columnNames;
+        private readonly string tableName;
+        private readonly IEnumerable<string> columnNames;        
+        private readonly SqlConditionGroup conditions = new SqlConditionGroup();
+
         private int? selectNumberOfRecords;
-        private SqlConditionGroup conditions = new SqlConditionGroup();
 
         public SqlSelect()
         {

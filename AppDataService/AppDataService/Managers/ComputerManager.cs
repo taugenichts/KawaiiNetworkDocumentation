@@ -52,7 +52,8 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Managers
 
         public UpdatedResponse UpdateComputer(ComputerDto computer)
         {
-            throw new NotImplementedException();
+            var response = new SqlUpdate<Computer>(ToComputer(computer)).Run(this.DatabaseSession);
+            return response;
         }
 
         private static ComputerDto ToComputerDto(Computer computer)

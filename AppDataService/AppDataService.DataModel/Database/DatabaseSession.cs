@@ -16,7 +16,9 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
         {
             get
             {                
-                return HttpContext.Current?.User?.Identity?.Name;                
+                return string.IsNullOrEmpty(HttpContext.Current?.User?.Identity?.Name) ?
+                            "anonymous"
+                            : HttpContext.Current?.User?.Identity?.Name;                
             }
         }
 
@@ -67,6 +69,26 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
             }
 
             return serverId;
+        }
+
+        public void UpdateSingle(string updateSql, IDictionary<string, object> parameterList, IDataModel entity)
+        {
+            int affectedRows = 0;
+
+            using (var connection = this.GetConnection())
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                affectedRows = connection.Execute(updateSql, parameterList);
+            }
+
+            if(affectedRows != 1)
+            {
+                DatabaseExceptionHelper.ThrowConcurrencyExcepiption(entity.Id);
+            }
         }
 
         private DynamicParameters CreateDynamicParameters(IDictionary<string, object> parameters)
