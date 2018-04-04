@@ -63,9 +63,8 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Managers
                 ComputerId = computer.ComputerId,
                 Inactive = computer.Inactive,
                 Name = computer.Name,
-                LastModified = computer.LastModified,
-                LastModifiedBy = computer.LastModifiedBy,
-                StaticIp = computer.StaticIp
+                StaticIp = computer.StaticIp,
+                RowVersion = computer.RowVersion
             };
         }
 
@@ -77,8 +76,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Managers
                 Inactive = computer.Inactive,
                 Name = computer.Name,
                 StaticIp = computer.StaticIp,
-                LastModified = computer.LastModified,
-                LastModifiedBy = computer.LastModifiedBy
+                RowVersion = computer.RowVersion
             };
         }
     }

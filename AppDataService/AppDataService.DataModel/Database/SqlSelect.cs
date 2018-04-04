@@ -18,7 +18,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
         {
             var modelType = typeof(T);
             this.tableName = modelType.Name;            
-            this.columnNames = DataModelHelper.GetProperties(modelType);
+            this.columnNames = DataModelHelper.GetProperties(modelType, true, false);
         }
 
         public SqlSelect<T> First(int first)

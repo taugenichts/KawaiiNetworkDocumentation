@@ -19,9 +19,6 @@ namespace Kawaii.NetworkDocumentation.AppDataService.ServiceModel.Computer
         public bool Inactive { get; set; }
 
         [DataMember(IsRequired = true)]
-        public DateTime LastModified { get; set; }
-
-        [DataMember(IsRequired = true)]
-        public string LastModifiedBy { get; set; }
+        public byte[] RowVersion { get; set; }
     }
 }

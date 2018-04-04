@@ -6,8 +6,6 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel
     {
         public int ServerId { get; set; }
 
-        public DateTime LastModified { get; set; }
-
-        public string LastModifiedBy { get; set; }
+        public byte[] RowVersion { get; set; }
     }
 }

@@ -52,11 +52,15 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
             return results ?? new List<T>();
         }
 
-        public int Insert<T>(string insertSql, T entity)
+        public dynamic Insert<T>(string insertSql, T entity) where T : IDataModel
         {
-            var insertSqlReturningId = string.Format("{0}; SELECT CAST(SCOPE_IDENTITY() as int)", insertSql);
+            var modelType = typeof(T);
+            var tableName = modelType.Name;
+            var idColumn = DataModelHelper.GetPrimaryKeyProperty(modelType);
 
-            int serverId;
+            var insertSqlReturningId = string.Format("{0}; SELECT {2} AS Id, RowVersion FROM {1} WHERE {2} = CAST(SCOPE_IDENTITY() as int)", insertSql, tableName, idColumn);
+
+            dynamic record = null;
 
             using (var connection = this.GetConnection())
             {
@@ -65,15 +69,19 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
                     connection.Open();
                 }
 
-                serverId = connection.Query<int>(insertSqlReturningId, entity).Single();
+                record = connection.Query(insertSqlReturningId, entity).Single();
             }
 
-            return serverId;
+            return record;
         }
 
-        public void UpdateSingle(string updateSql, IDictionary<string, object> parameterList, IDataModel entity)
+        public dynamic UpdateSingle<T>(string updateSql, IDictionary<string, object> parameterList, T entity) where T : IDataModel
         {
-            int affectedRows = 0;
+            var modelType = typeof(T);
+            var tableName = modelType.Name;
+            var idColumn = DataModelHelper.GetPrimaryKeyProperty(modelType);
+                        
+            dynamic record = null;
 
             using (var connection = this.GetConnection())
             {
@@ -82,13 +90,17 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
                     connection.Open();
                 }
 
-                affectedRows = connection.Execute(updateSql, parameterList);
+                var affectedRows = connection.Execute(updateSql, parameterList);
+                if(affectedRows == 0)
+                {
+                    DatabaseExceptionHelper.ThrowConcurrencyExcepiption(entity.Id);
+                }
+
+                var idQuery = string.Format("SELECT {1} AS Id, RowVersion FROM {0} WHERE {1} = @{1}", tableName, idColumn);
+                record = connection.Query(idQuery, entity).Single();
             }
 
-            if(affectedRows != 1)
-            {
-                DatabaseExceptionHelper.ThrowConcurrencyExcepiption(entity.Id);
-            }
+            return record;
         }
 
         private DynamicParameters CreateDynamicParameters(IDictionary<string, object> parameters)

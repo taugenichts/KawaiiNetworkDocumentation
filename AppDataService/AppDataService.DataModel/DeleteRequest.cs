@@ -2,12 +2,9 @@
 
 namespace Kawaii.NetworkDocumentation.AppDataService.DataModel
 {
-    public class CreatedResponse : IRecordChangeInfo
+    public class DeleteRequest : IRecordChangeInfo
     {
-        public int ClientId { get; set; }
-
-        public int ServerId { get; set; }
-
+        public int Id { get; set; }
         public byte[] RowVersion { get; set; }
     }
 }

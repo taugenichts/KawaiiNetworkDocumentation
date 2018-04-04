@@ -9,8 +9,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
     public class SqlUpdate<T>
         where T : IDataModel
     {
-        private const string LastModifiedConcurrencyParameterName = "LastModifiedOld";
-        private const string LastModifiedByConcurrencyParameterName = "LastModifiedByOld";
+        private const string LastRowVersionParameterName = "RowVersionOld";
 
         private readonly T entity;
         private readonly string tableName;
@@ -22,8 +21,8 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
             this.entity = entity;
             var modelType = typeof(T);
             this.tableName = modelType.Name;
-            this.primaryKeyColumn = this.tableName + "Id";
-            this.columnNames = DataModelHelper.GetProperties(modelType).Where(x => x != this.primaryKeyColumn);
+            this.primaryKeyColumn = DataModelHelper.GetPrimaryKeyProperty(modelType);
+            this.columnNames = DataModelHelper.GetProperties(modelType).Where(x => x != primaryKeyColumn);
         }
 
         public UpdatedResponse Run(IDatabaseSession dbSession)
@@ -34,26 +33,20 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
             var updateSql = this.BuildSql(changeInfo != null);
 
             if (changeInfo != null)
-            {                
-                var oldLastModified = changeInfo.LastModified;
-                var oldLastModifiedBy = changeInfo.LastModifiedBy;
-                changeInfo.LastModified = modificationTimeStamp;
-                changeInfo.LastModifiedBy = dbSession.User;
-                                
-                parameters = this.GetParameters(oldLastModified, oldLastModifiedBy);                           
+            {                                   
+                parameters = this.GetParameters(changeInfo.RowVersion);                           
             }
             else
             {
                 parameters = this.GetParameters();
             }            
 
-            dbSession.UpdateSingle(updateSql, parameters, this.entity);
+            var record = dbSession.UpdateSingle(updateSql, parameters, this.entity);
 
             return new UpdatedResponse()
                         {
                             ServerId = this.entity.Id,
-                            LastModified = modificationTimeStamp,
-                            LastModifiedBy = dbSession.User
+                            RowVersion = record.RowVersion
                         };
         }      
         
@@ -68,17 +61,15 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
 
             if (checkConcurrency)
             {
-                updateSqlBuilder.Append(string.Format(" AND {0} = @{1} AND {2} = @{3}",
-                                                DataModelHelper.LastModifiedProperty,
-                                                LastModifiedConcurrencyParameterName,
-                                                DataModelHelper.LastModifiedByProperty,
-                                                LastModifiedByConcurrencyParameterName));
+                updateSqlBuilder.Append(string.Format(" AND {0} = @{1}",
+                                                DataModelHelper.RowVersionPropertyName,
+                                                LastRowVersionParameterName));
             }
 
             return updateSqlBuilder.ToString();
         }
 
-        private IDictionary<string, object> GetParameters(DateTime? lastModified = null, string lastModifiedBy = null)
+        private IDictionary<string, object> GetParameters(byte[] lastRowVersion = null)
         {
             var parameters = new Dictionary<string, object>();
             var properties = typeof(T).GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public);
@@ -93,10 +84,9 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
             }
 
             // add concurrency parameters if necessary
-            if(lastModified.HasValue && !string.IsNullOrEmpty(lastModifiedBy))
+            if(lastRowVersion != null)
             {
-                parameters.Add(LastModifiedConcurrencyParameterName, lastModified.Value);
-                parameters.Add(LastModifiedByConcurrencyParameterName, lastModifiedBy);
+                parameters.Add(LastRowVersionParameterName, lastRowVersion);
             }
 
             return parameters;

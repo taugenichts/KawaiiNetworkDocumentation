@@ -9,11 +9,17 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
     {
         private static IReadOnlyCollection<string> dataModelInterfaceProperties;
 
+        private static IReadOnlyCollection<string> concurrencyInterfaceProperties;
+
         private static Dictionary<Type, IEnumerable<string>> modelProperties = new Dictionary<Type, IEnumerable<string>>();
 
-        public static string LastModifiedProperty;
-
-        public static string LastModifiedByProperty;
+        public static string RowVersionPropertyName
+        {
+            get
+            {
+                return concurrencyInterfaceProperties.First();
+            }
+        }
 
         static DataModelHelper()
         {
@@ -21,20 +27,29 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
             dataModelInterfaceProperties = interfaceType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy).Select(x => x.Name).ToList();
 
             var concurrencyInterfaceType = typeof(IRecordChangeInfo);
-            var concurrencyInterfaceProperties = concurrencyInterfaceType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-
-            LastModifiedProperty = concurrencyInterfaceProperties.Single(x => x.PropertyType == typeof(DateTime)).Name;
-            LastModifiedByProperty = concurrencyInterfaceProperties.Single(x => x.PropertyType == typeof(string)).Name;
+            concurrencyInterfaceProperties = concurrencyInterfaceType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy).Select(x => x.Name).ToList();
         }
 
-        public static IEnumerable<string> GetProperties(Type type, bool ignoreDataModelInterface = true)
+        public static IEnumerable<string> GetProperties(Type type, bool ignoreDataModelInterface = true, bool ignoreConcurrency = true)
         {
             if(!modelProperties.Keys.Contains(type))
             {
                 ReadProperties(type);
             }
             
-            return ignoreDataModelInterface ? modelProperties[type].Where(x => !dataModelInterfaceProperties.Contains(x)) : modelProperties[type];
+            var properties = ignoreDataModelInterface ? modelProperties[type].Where(x => !dataModelInterfaceProperties.Contains(x)) : modelProperties[type];
+            properties = ignoreConcurrency ? properties.Where(x => !concurrencyInterfaceProperties.Contains(x)) : properties;
+            return properties;
+        }
+
+        public static string GetPrimaryKeyProperty(Type type)
+        {
+            if (!modelProperties.Keys.Contains(type))
+            {
+                ReadProperties(type);
+            }
+
+            return modelProperties[type].Single(x => x == (type.Name + "Id"));
         }
 
         private static void ReadProperties(Type type)

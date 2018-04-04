@@ -49,6 +49,7 @@
     <Compile Include="Database\SqlUpdate.cs" />
     <Compile Include="DeletedResponse.cs" />
     <Compile Include="Database\SqlInsert.cs" />
+    <Compile Include="DeleteRequest.cs" />
     <Compile Include="UpdatedResponse.cs" />
     <Compile Include="Entities\Computer.cs" />
     <Compile Include="Database\DatabaseSession.cs" />
