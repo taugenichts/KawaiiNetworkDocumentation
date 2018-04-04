@@ -26,20 +26,12 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
         }
 
         public UpdatedResponse Run(IDatabaseSession dbSession)
-        {            
-            var modificationTimeStamp = DateTime.Now;
+        {   
             IDictionary<string, object> parameters;
             var changeInfo = entity as IRecordChangeInfo;
             var updateSql = this.BuildSql(changeInfo != null);
 
-            if (changeInfo != null)
-            {                                   
-                parameters = this.GetParameters(changeInfo.RowVersion);                           
-            }
-            else
-            {
-                parameters = this.GetParameters();
-            }            
+            parameters = this.GetParameters(changeInfo?.RowVersion);                                                 
 
             var record = dbSession.UpdateSingle(updateSql, parameters, this.entity);
 

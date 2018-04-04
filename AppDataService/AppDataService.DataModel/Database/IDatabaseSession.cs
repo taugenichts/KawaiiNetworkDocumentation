@@ -14,5 +14,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
         dynamic Insert<T>(string insertSql, T entity) where T : IDataModel;
 
         dynamic UpdateSingle<T>(string updateSql, IDictionary<string, object> parameterList, T entity) where T : IDataModel;
+
+        void DeleteSingle<T>(string deleteSql, IDictionary<string, object> parameterList, T entity) where T : IDataModel;
     }
 }

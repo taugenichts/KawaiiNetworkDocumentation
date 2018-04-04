@@ -50,5 +50,12 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Controllers
         {
             return this.computerManager.UpdateComputer(computer);
         }
+
+        [Route("")]
+        [HttpDelete]
+        public DeletedResponse Delete(DeleteRequest deleteRequest)
+        {
+            return this.computerManager.DeleteComputer(deleteRequest);
+        }
     }
 }

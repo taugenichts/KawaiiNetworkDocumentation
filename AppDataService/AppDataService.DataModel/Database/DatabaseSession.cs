@@ -103,6 +103,27 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
             return record;
         }
 
+        public void DeleteSingle<T>(string deleteSql, IDictionary<string, object> parameterList, T entity) where T : IDataModel
+        {
+            var modelType = typeof(T);
+            var tableName = modelType.Name;
+            var idColumn = DataModelHelper.GetPrimaryKeyProperty(modelType);
+            
+            using (var connection = this.GetConnection())
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                var affectedRows = connection.Execute(deleteSql, parameterList);
+                if (affectedRows == 0)
+                {
+                    DatabaseExceptionHelper.ThrowConcurrencyExcepiption(entity.Id);
+                }                
+            }            
+        }
+
         private DynamicParameters CreateDynamicParameters(IDictionary<string, object> parameters)
         {
             if(parameters != null && parameters.Keys.Any())

@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="CreatedResponse.cs" />
     <Compile Include="Database\DatabaseExceptionHelper.cs" />
+    <Compile Include="Database\SqlDelete.cs" />
     <Compile Include="Database\SqlUpdate.cs" />
     <Compile Include="DeletedResponse.cs" />
     <Compile Include="Database\SqlInsert.cs" />

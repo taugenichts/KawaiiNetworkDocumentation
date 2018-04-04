@@ -10,17 +10,6 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Managers
 {
     public class ComputerManager : BaseManager, IComputerManager
     {
-        public CreatedResponse CreateComputer(ComputerDto computer)
-        {
-            var response = new SqlInsert<Computer>(ToComputer(computer)).Run(this.DatabaseSession);
-            return response;
-        }
-
-        public DeletedResponse DeleteComputer(int id, DateTime lastModified)
-        {
-            throw new NotImplementedException();
-        }
-
         public ComputerDto GetComputer(int id)
         {
             var computer = new SqlSelect<Computer>()
@@ -50,9 +39,21 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Managers
             return computers.Select(ToComputerDto);
         }
 
+        public CreatedResponse CreateComputer(ComputerDto computer)
+        {
+            var response = new SqlInsert<Computer>(ToComputer(computer)).Run(this.DatabaseSession);
+            return response;
+        }
+
         public UpdatedResponse UpdateComputer(ComputerDto computer)
         {
             var response = new SqlUpdate<Computer>(ToComputer(computer)).Run(this.DatabaseSession);
+            return response;
+        }
+
+        public DeletedResponse DeleteComputer(DeleteRequest request)
+        {
+            var response = new SqlDelete<Computer>(ToComputer(request)).Run(this.DatabaseSession);
             return response;
         }
 
@@ -77,6 +78,15 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Managers
                 Name = computer.Name,
                 StaticIp = computer.StaticIp,
                 RowVersion = computer.RowVersion
+            };
+        }
+
+        private static Computer ToComputer(DeleteRequest deleteRequest)
+        {
+            return new Computer
+            {
+                ComputerId = deleteRequest.Id,
+                RowVersion = deleteRequest.RowVersion
             };
         }
     }

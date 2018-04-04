@@ -17,6 +17,6 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Managers
 
         UpdatedResponse UpdateComputer(ComputerDto computer);
 
-        DeletedResponse DeleteComputer(int id, DateTime lastModified);
+        DeletedResponse DeleteComputer(DeleteRequest deleteRequest);
     }
 }
