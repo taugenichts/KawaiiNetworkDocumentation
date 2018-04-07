@@ -49,6 +49,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Tests.ManagerTests
                 Assert.AreEqual(computer.ComputerId, computerDto.ComputerId);
                 Assert.AreEqual(computer.Inactive, computerDto.Inactive);
                 Assert.AreEqual(computer.StaticIp, computerDto.StaticIp);
+                Assert.AreEqual(computer.RowVersion, computerDto.RowVersion);
             }
         }
 
@@ -61,15 +62,19 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Tests.ManagerTests
                 var computer = new Computer
                 {
                     ComputerId = i + 1,
-                    Inactive = Randomize.Bool(),
-                    LastModified = Randomize.Date(-10, 0),
-                    LastModifiedBy = Randomize.String(20),
+                    Inactive = Randomize.Bool(),                    
                     Name = Randomize.String(30),
                     StaticIp = string.Format("{0}.{1}.{2}.{3}", 
                                                 Randomize.Int(1, 255).ToString(), 
-                                                Randomize.Int(1, 255).ToString(), 
-                                                Randomize.Int(1, 255).ToString(), 
-                                                Randomize.Int(1, 255).ToString())
+                                                Randomize.Int(0, 255).ToString(), 
+                                                Randomize.Int(0, 255).ToString(), 
+                                                Randomize.Int(1, 255).ToString()),
+                    RowVersion = new byte[] {
+                                    (byte)Randomize.Int(0, 255),
+                                    (byte)Randomize.Int(0, 255),
+                                    (byte)Randomize.Int(0, 255),
+                                    (byte)Randomize.Int(0, 255)
+                                    }
                 };
 
                 computers.Add(computer);
