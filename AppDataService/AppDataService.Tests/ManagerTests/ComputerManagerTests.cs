@@ -73,8 +73,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Tests.ManagerTests
                                     (byte)Randomize.Int(0, 255),
                                     (byte)Randomize.Int(0, 255),
                                     (byte)Randomize.Int(0, 255),
-                                    (byte)Randomize.Int(0, 255)
-                                    }
+                                    (byte)Randomize.Int(0, 255)}
                 };
 
                 computers.Add(computer);
