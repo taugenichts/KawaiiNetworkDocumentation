@@ -53,13 +53,13 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
             return dbSession.Query<T>(this.BuildSql(), parameters);
         }
 
-        private string BuildSql()
+        public string BuildSql()
         {
             string topString = this.selectNumberOfRecords.HasValue ? string.Format("TOP {0} ", this.selectNumberOfRecords.Value) : string.Empty;
 
             string whereString = this.conditions.ChildConditions.Any() ? string.Format(" WHERE {0}", this.conditions.ToString()) : string.Empty;
 
-            return string.Format("SELECT {0}{1} FROM {2}{3};",
+            return string.Format("SELECT {0}{1} FROM {2}{3}",
                                     topString,
                                     string.Join(", ", this.columnNames),
                                     this.tableName,

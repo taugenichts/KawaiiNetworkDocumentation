@@ -95,6 +95,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataModelTests\SqlCommandBuilderTests.cs" />
     <Compile Include="ManagerTests\ComputerManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers\Randomize.cs" />

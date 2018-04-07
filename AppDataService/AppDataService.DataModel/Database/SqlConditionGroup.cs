@@ -30,7 +30,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
                 }
                 else
                 {
-                    builder.Append(string.Format("{0} {1} ", this.AppendWithOperator.ToString(), condition.ToString()));
+                    builder.Append(string.Format("{0} {1} ", condition.AppendWithOperator.ToString(), condition.ToString()));
                 }
             }
 
