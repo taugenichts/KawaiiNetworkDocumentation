@@ -28,8 +28,8 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
         public UpdatedResponse Run(IDatabaseSession dbSession)
         {   
             IDictionary<string, object> parameters;
-            var changeInfo = entity as IRecordChangeInfo;
-            var updateSql = this.BuildSql(changeInfo != null);
+            var changeInfo = this.entity as IRecordChangeInfo;
+            var updateSql = this.BuildSql();
 
             parameters = this.GetParameters(changeInfo?.RowVersion);                                                 
 
@@ -42,7 +42,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
                         };
         }      
         
-        private string BuildSql(bool checkConcurrency)
+        public string BuildSql()
         {
             var updateSqlBuilder = new StringBuilder();
 
@@ -51,7 +51,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
                                         string.Join(", ", this.columnNames.Select(x => string.Format("{0} = @{0}", x))),
                                         string.Format("{0} = @{0}", this.primaryKeyColumn)));
 
-            if (checkConcurrency)
+            if (this.entity is IRecordChangeInfo)
             {
                 updateSqlBuilder.Append(string.Format(" AND {0} = @{1}",
                                                 DataModelHelper.RowVersionPropertyName,

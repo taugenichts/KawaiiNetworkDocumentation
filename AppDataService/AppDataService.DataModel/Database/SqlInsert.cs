@@ -36,7 +36,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
                         };
         }
 
-        private string BuildSql()
+        public string BuildSql()
         {
             return string.Format("INSERT INTO {0} ({1}) VALUES ({2})",
                             this.tableName,

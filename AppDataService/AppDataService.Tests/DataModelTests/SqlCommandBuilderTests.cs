@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Kawaii.NetworkDocumentation.AppDataService.DataModel;
 using Kawaii.NetworkDocumentation.AppDataService.DataModel.Database;
 
@@ -21,7 +20,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Tests.DataModelTests
             Assert.AreEqual(expectedSql, actualSql);
 
             // with implementation of IRecordChangeInfo
-            expectedSql = @"SELECT TestDataModelId, Name, RowVersion FROM TestDataModelWithChangeInfo";
+            expectedSql = @"SELECT TestDataModelWithChangeInfoId, Name, RowVersion FROM TestDataModelWithChangeInfo";
             var select2 = new SqlSelect<TestDataModelWithChangeInfo>();
             actualSql = select2.BuildSql();
 
@@ -93,6 +92,84 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Tests.DataModelTests
             Assert.AreEqual(expectedSql, conditionGroup.ToString());
         }
 
+        [TestMethod]
+        public void SqlUpdateShouldBuildProperSql()
+        {
+            var expectedSql = @"UPDATE TestDataModel SET Name = @Name WHERE TestDataModelId = @TestDataModelId";
+
+            var update = new SqlUpdate<TestDataModel>(new TestDataModel
+            {
+                Id = 5,
+                TestDataModelId = 7,
+                Name = "TestRecord"
+            });
+
+            Assert.AreEqual(expectedSql, update.BuildSql());
+
+            expectedSql = @"UPDATE TestDataModelWithChangeInfo SET Name = @Name WHERE TestDataModelWithChangeInfoId = @TestDataModelWithChangeInfoId AND RowVersion = @RowVersionOld";
+            var update2 = new SqlUpdate<TestDataModelWithChangeInfo>(new TestDataModelWithChangeInfo
+            {
+                Id = 8,
+                TestDataModelWithChangeInfoId = 9,
+                Name = "TestRecord2",
+                RowVersion = new byte[] { 0, 1, 3, 8}
+            });
+
+            Assert.AreEqual(expectedSql, update2.BuildSql());
+        }
+
+        [TestMethod]
+        public void SqlInsertShouldBuildProperSql()
+        {
+            var expectedSql = @"INSERT INTO TestDataModel (Name) VALUES (@Name)";
+
+            var insert = new SqlInsert<TestDataModel>(new TestDataModel
+            {
+                Id = 5,
+                TestDataModelId = 7,
+                Name = "TestRecord"
+            });
+
+            Assert.AreEqual(expectedSql, insert.BuildSql());
+
+            expectedSql = @"INSERT INTO TestDataModelWithChangeInfo (Name) VALUES (@Name)";
+            var insert2 = new SqlInsert<TestDataModelWithChangeInfo>(new TestDataModelWithChangeInfo
+            {
+                Id = 8,
+                TestDataModelWithChangeInfoId = 9,
+                Name = "TestRecord2",
+                RowVersion = new byte[] { 0, 1, 3, 8 }
+            });
+
+            Assert.AreEqual(expectedSql, insert2.BuildSql());
+        }
+
+        [TestMethod]
+        public void SqlDeleteShouldBuildProperSql()
+        {
+            var expectedSql = @"DELETE FROM TestDataModel WHERE TestDataModelId = @TestDataModelId";
+
+            var delete = new SqlDelete<TestDataModel>(new TestDataModel
+            {
+                Id = 5,
+                TestDataModelId = 7,
+                Name = "TestRecord"
+            });
+
+            Assert.AreEqual(expectedSql, delete.BuildSql());
+
+            expectedSql = @"DELETE FROM TestDataModelWithChangeInfo WHERE TestDataModelWithChangeInfoId = @TestDataModelWithChangeInfoId AND RowVersion = @RowVersionOld";
+            var delete2 = new SqlDelete<TestDataModelWithChangeInfo>(new TestDataModelWithChangeInfo
+            {
+                Id = 8,
+                TestDataModelWithChangeInfoId = 9,
+                Name = "TestRecord2",
+                RowVersion = new byte[] { 0, 1, 3, 8 }
+            });
+
+            Assert.AreEqual(expectedSql, delete2.BuildSql());
+        }
+
         private class TestDataModel : IDataModel
         {
             public int Id { get; set; }
@@ -106,7 +183,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Tests.DataModelTests
         {
             public int Id { get; set; }
 
-            public int TestDataModelId { get; set; }
+            public int TestDataModelWithChangeInfoId { get; set; }
 
             public string Name { get; set; }
 

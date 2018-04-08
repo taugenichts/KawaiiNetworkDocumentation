@@ -25,7 +25,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
         {
             IDictionary<string, object> parameters;
             var changeInfo = entity as IRecordChangeInfo;
-            var deleteSql = BuildSql(changeInfo != null);
+            var deleteSql = this.BuildSql();
 
             parameters = this.GetParameters(changeInfo?.RowVersion);
 
@@ -37,7 +37,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
             };
         }
 
-        private string BuildSql(bool checkConcurrency)
+        public string BuildSql()
         {
             var deleteSqlBuilder = new StringBuilder();
 
@@ -45,7 +45,7 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
                                         this.tableName,                                        
                                         this.primaryKeyColumn));
 
-            if (checkConcurrency)
+            if (this.entity is IRecordChangeInfo)
             {
                 deleteSqlBuilder.Append(string.Format(" AND {0} = @{1}",
                                                 DataModelHelper.RowVersionPropertyName,
