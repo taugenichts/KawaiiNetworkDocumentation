@@ -32,9 +32,9 @@ namespace Kawaii.NetworkDocumentation.AppDataService.Controllers
 
         [Route("Search")]
         [HttpGet]
-        public IEnumerable<ComputerDto> Search([FromUri] ComputerSearchRequest searchRequest)
+        public IEnumerable<ComputerDto> Search([FromUri] ComputerSearchRequest search)
         {
-            return this.computerManager.SearchComputers(searchRequest);
+            return this.computerManager.SearchComputers(search);
         }
 
         [Route("")]

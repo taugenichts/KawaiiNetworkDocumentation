@@ -51,6 +51,7 @@
     <Compile Include="DeletedResponse.cs" />
     <Compile Include="Database\SqlInsert.cs" />
     <Compile Include="DeleteRequest.cs" />
+    <Content Include="Sql\Schema\Tables.sql" />
     <Compile Include="UpdatedResponse.cs" />
     <Compile Include="Entities\Computer.cs" />
     <Compile Include="Database\DatabaseSession.cs" />

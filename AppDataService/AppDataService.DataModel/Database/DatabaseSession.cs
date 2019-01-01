@@ -9,8 +9,8 @@ namespace Kawaii.NetworkDocumentation.AppDataService.DataModel.Database
 {
     public class DatabaseSession : IDatabaseSession
     {        
-        private Func<string, IDbConnection> createConnectionDelegate;
-        private string connectionString;
+        private readonly Func<string, IDbConnection> createConnectionDelegate;
+        private readonly string connectionString;
         
         public string User
         {
