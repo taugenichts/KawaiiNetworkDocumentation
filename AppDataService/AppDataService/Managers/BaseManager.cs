@@ -1,5 +1,5 @@
 ﻿using Kawaii.NetworkDocumentation.AppDataService.DataModel.Database;
-using Unity.Attributes;
+using Unity;
 
 namespace Kawaii.NetworkDocumentation.AppDataService.Managers
 {
